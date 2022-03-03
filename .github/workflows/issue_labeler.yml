@@ -1,0 +1,49 @@
+name: "Set Issue Label"
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["branch update", "Branch update"]'
+          labels: '["branch update"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["admin","Admin", "administrator","Administrator"]'
+          labels: '["admin"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["bug", "error","Bug", "Error", "err", "Err"]'
+          labels: '["bug"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["general", "General"]'
+          labels: '["general"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["IMPORTANT!","IMPORTANT","Important","important", "important!"]'
+          labels: '["IMPORTANT!"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["invalid", "Invalid"]'
+          labels: '["invalid"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["no code", "not coding","No code", "Not coding"]'
+          labels: '["not coding"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["- [ ] #", "- [x] #"]'
+          labels: '["Grouped Task"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
