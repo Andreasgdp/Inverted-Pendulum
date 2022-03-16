@@ -26,7 +26,8 @@ B = [0; 1/M; 0; b*1/(M*L)];
 lambda = eig(A)
 
 
-% Rank should be 4 in order to be able to control the system (Get documentation on why this is the case)
+% Rank should be 4 in order to be able to control the system 
+% The system is controllable if Co has full rank n ("Co = ctrb(sys.A,sys.B);").
 rank(ctrb(A,B))
 
 %% Use Matlab LQR controller
