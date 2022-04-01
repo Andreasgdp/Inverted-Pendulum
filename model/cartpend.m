@@ -1,10 +1,8 @@
-function dx = cartpend(x, m, M, L, g, d, u)
+function dy = cartpend(y,m,M,l,g,b_c,b_p,F)
 
-Sx = sin(x(3)); %Sx is just a shortening of sin(x)
-Cx = cos(x(3)); %Cx is just a shortening of cos(x)
-D = m*L*L*(M+m*(1-Cx^2));
+I = (1/3)*m*(2*l)^2;
 
-dx(1,1) = x(2);
-dx(2,1) = (1/D)*(-m^2*L^2*g*Cx*Sx + m*L^2*(m*L*x(4)^2*Sx - d*x(2))) + m*L*L*(1/D)*u;
-dx(3,1) = x(4);
-dx(4,1) = (1/D)*((m+M)*m*g*L*Sx - m*L*Cx*(m*L*x(4)^2*Sx - d*x(2))) - m*L*Cx*(1/D)*u;
+dy(1,1) = y(2);
+dy(2,1) = (b_p*m*l*y(4)*cos(y(3)) + m^2*l^2*g*sin(y(3))*cos(y(3)) + (I + m*l^2)*(-b_c*y(2) + F + m*l*y(4)^2*sin(y(3))))/(M*m*l^2 + (M+m)*I + m^2*l^2*sin(y(3))^2);
+dy(3,1) = y(4);
+dy(4,1) = -(F*m*l*cos(y(3)) - b_c*m*l*y(2)*cos(y(3)) + m^2*l^2*y(4)^2*sin(y(3))*cos(y(3)) + (M + m)*(b_p*y(4) + g*m*l*sin(y(3))))/(M*m*l^2 + (M + m)*I + m^2*l^2*sin(y(3))^2);
