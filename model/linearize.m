@@ -4,13 +4,13 @@ close all
 syms x_c v_c theta omega F m M l b_p b_c g I t s
 
 %% Parameters
-m = 0.084;
-M = 0.5;
-l = 0.35;
-g = 9.82;
-b_p = 0.0012;
-b_c = 5;
-I = (1/3)*m*(2*l)^2;
+% m = 0.084;
+% M = 0.5;
+% l = 0.35;
+% g = 9.82;
+% b_p = 0.0012;
+% b_c = 5;
+% I = (1/3)*m*(2*l)^2;
 
 %% Definition of state space
 x = [x_c; v_c; theta; omega];
@@ -38,10 +38,10 @@ D = [0; 0];
 % rank(ctrb(A,B))
 
 %% Convert to doubles
-A = double(A);
-B = double(B);
-C = double(C);
-D = double(D);
+% A = double(A);
+% B = double(B);
+% C = double(C);
+% D = double(D);
 
 %% State space model to Transfer function
 % [b,a] = ss2tf(A,B,C,D);
@@ -55,8 +55,8 @@ G = C*(((s*eye(4)-A))^-1)*B+D;
 
 %% Simplify
 G = simplify(G);
-G = subs(G,[m M l g b_p b_c I],[0.84 0.5 0.35 9.82 0.0012 5 (1/3)*0.84*(2*0.35)^2]);
-G = simplify(G)
+%G = subs(G,[m M l g b_p b_c I],[0.84 0.5 0.35 9.82 0.0012 5 (1/3)*0.84*(2*0.35)^2]);
+%G = simplify(G)
 
 s = tf('s');
 
