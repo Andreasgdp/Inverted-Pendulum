@@ -2,9 +2,10 @@ clear all, close all, clc
 
 m = 1;
 M = 5;
-L = 2;
-g = -10;
-d = 1;
+l = 2;
+g = 9.82;
+b_c = 1;
+b_p = 1;
 
 s = 1; % pendulum up (s=1)
 
