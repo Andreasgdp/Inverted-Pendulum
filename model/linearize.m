@@ -55,8 +55,8 @@ G = C*(((s*eye(4)-A))^-1)*B+D;
 
 %% Simplify
 G = simplify(G);
-%G = subs(G,[m M l g b_p b_c I],[0.84 0.5 0.35 9.82 0.0012 5 (1/3)*0.84*(2*0.35)^2]);
-%G = simplify(G)
+G = subs(G,[m M l g b_p b_c I],[0.84 0.5 0.35 9.82 0.0012 5 (1/3)*0.84*(2*0.35)^2]);
+G = simplify(G)
 
 s = tf('s');
 
@@ -71,8 +71,8 @@ G_p = -(735000*s)/(- 588245*s^3 - 3005270*s^2 + 9656718*s + 36088500);
 %zeros = zero(G_p);
 
 %% Pzmap
-figure, pzmap(G_c)
-figure, pzmap(G_p)
+% figure, pzmap(G_c)
+% figure, pzmap(G_p)
 
 %% Step
 %figure, step(G_c)
