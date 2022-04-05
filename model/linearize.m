@@ -56,19 +56,19 @@ G = C*(((s*eye(4)-A))^-1)*B+D;
 %% Simplify
 G = simplify(G);
 G = subs(G,[m M l g b_p b_c I],[0.84 0.5 0.35 9.82 0.0012 5 (1/3)*0.84*(2*0.35)^2]);
-G = simplify(G)
+G = vpa(G);
 
 s = tf('s');
 
-G_c = -(600250*s^2 + 3000*s - 7217700)/(s*(- 588245*s^3 - 3005270*s^2 + 9656718*s + 36088500));
-G_p = -(735000*s)/(- 588245*s^3 - 3005270*s^2 + 9656718*s + 36088500);
+G_c = -(1.0*(0.2401*s^2 + 0.0012*s - 2.88708))/(s*(- 0.235298*s^3 - 1.202108*s^2 + 3.8626872*s + 14.4354));
+G_p = -(0.294*s)/(- 0.235298*s^3 - 1.202108*s^2 + 3.8626872*s + 14.4354);
 
 %% Pole and zero
-%poles = pole(G_c);
-%zeros = zero(G_c);
-
-%poles = pole(G_p);
-%zeros = zero(G_p);
+% poles = pole(G_c);
+% zeros = zero(G_c);
+% 
+% poles = pole(G_p);
+% zeros = zero(G_p);
 
 %% Pzmap
 % figure, pzmap(G_c)
