@@ -30,9 +30,9 @@ G_c = 0.2401*s^2 + 0.0012*s - 2.887/(0.2353*s^4 + 1.202*s^3 - 3.863*s^2 - 14.44*
 
 kp = 1.72;
 
-ti = -0.5;
+ti = 0.0434531271556642;
 
-td = 0.1;
+td = 5.55644601779429;
 
 ksFind = (1 + ti/(s) + td*s);
 ks = kp*(1 + ti/(s) + td*s);
@@ -46,7 +46,7 @@ pole(C*G_c)
 zero(C*G_c)
 
 % figure(1)
-rlocus(G_c)
+rlocus(ksFind*G_c)
 % sisotool(ksFind*G_c)
 % 
 % figure(2)

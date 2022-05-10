@@ -62,43 +62,63 @@ G_p = minreal(TF_Pend);
 
 
 % %% State space model to Transfer function
-% [b,a] = ss2tf(A,B,C,D);
-% 
-% sys = ss(A, B, C, D)
-% 
-% % numerator = b;
-% % denominator = a;
-% % G = tf(numerator,denominator);
-% 
-% G = tf(sys);
-% 
-% G_c = G(1);
-% G_p = G(2);
-% 
+sys = ss(A, B, C, D)
+
+pzmap(sys)
+
+G = tf(sys);
+
+G_c = G(1);
+G_p = G(2);
+
 % 
 % % Pole and zero
-cart_poles = pole(G_c);
-cart_zeros = zero(G_c);
+% cart_poles = pole(G_c);
+% cart_zeros = zero(G_c);
 
 pendulum_poles = pole(G_p);
 pendulum_zeros = zero(G_p);
 
 % Pzmap
-figure, pzmap(G_c)
+% figure, pzmap(G_c)
 figure, pzmap(G_p)
 
 % Step
-figure, step(G_c)
+% figure, step(G_c)
 figure, step(G_p)
 
+
+
+figure, rlocus(G_p)
+
+
+%% test PD
+s = tf('s');
+kp = 120;
+td = 0.08;
+
+ksFind = (1 + td*s);
+
+figure(42)
+rlocus(ksFind*G_p)
+%% test PID
+kp = 120;
+ti = 10;
+td = 0.08;
+
+ksFind = (1 + ti/(s) + td*s);
+
+figure(69)
+rlocus(ksFind*G_p)
 %% test PID 1 1 1
-Kp = 120;
-Ki = 35;
-Kd = 8;
-Contr = pid(Kp,Ki,Kd);
-T = feedback(G_p,Contr);
-figure()
-t=0:0.01:10;
-impulse(T,t)
+% Kp = 120;
+% Ki = 35;
+% Kd = 8;
+% Contr = pid(Kp,Ki,Kd);
+% T = feedback(G_p,Contr);
+% figure()
+% t=0:0.01:10;
+% impulse(T,t)
+
 
 
