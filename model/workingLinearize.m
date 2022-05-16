@@ -64,7 +64,7 @@ G_p = minreal(TF_Pend);
 % %% State space model to Transfer function
 sys = ss(A, B, C, D)
 
-pzmap(sys)
+%pzmap(sys)
 
 G = tf(sys);
 
@@ -80,18 +80,22 @@ pendulum_poles = pole(G_p);
 pendulum_zeros = zero(G_p);
 
 % Pzmap
-% figure, pzmap(G_c)
-figure, pzmap(G_p)
+figure, pzmap(G_c)
+%figure, pzmap(G_p)
 
 % Step
 % figure, step(G_c)
-figure, step(G_p)
+%figure, step(G_p)
 
 
 
-figure, rlocus(G_p)
+%figure, rlocus(G_p)
 
+%% test P
+s = tf('s');
+kp = 120;
 
+%figure(42), rlocus(G_p)
 %% test PD
 s = tf('s');
 kp = 120;
@@ -99,17 +103,40 @@ td = 0.08;
 
 ksFind = (1 + td*s);
 
-figure(42)
-rlocus(ksFind*G_p)
+%figure(43), rlocus(ksFind*G_p)
 %% test PID
-kp = 120;
-ti = 10;
-td = 0.08;
+% kp = 120;
+% ti = 10;
+% td = 0.08;
+
+% kp = 60;
+% ti = 10.0545991325963;
+% td = 0.0244071621390575;
+
+% kp = 558;
+% ti = 3233.12;
+% td = 22.38;
+
+% kp = 37.5559806691701;
+% ti = 4.79031708469581;
+% td = 0.0396308247236052;
+
+% Cart
+% kp = -0.0603910190701767;
+% ti = 0.0784455862847791;
+% td = 3.01881554246508;
+
+kp = -0.0163648626701333;
+ti = 0.0434531271556642;
+td = 5.55644601779429;
 
 ksFind = (1 + ti/(s) + td*s);
 
-figure(69)
-rlocus(ksFind*G_p)
+pole((ksFind*G_c)/(1+ksFind*G_c))
+zero((ksFind*G_c)/(1+ksFind*G_c))
+figure, pzmap((ksFind*G_c)/(1+ksFind*G_c))
+
+%figure(69), rlocus(ksFind*G_p)
 %% test PID 1 1 1
 % Kp = 120;
 % Ki = 35;
@@ -120,5 +147,36 @@ rlocus(ksFind*G_p)
 % t=0:0.01:10;
 % impulse(T,t)
 
+%% Performance specification 
+t_r = 0.2;         %s
+M_p = 40/100;
+t_s = 2;         %s
+alpha = 0.5/100;
 
+omega_n = 1.8/t_r;
+xi = sqrt((log(M_p)/(-pi))^2 / (1+(log(M_p)/(-pi))^2));
+sigma = -(log(alpha))/(t_s);
+
+% Plot rise time
+th = pi/2:pi/100:(3*pi)/2;
+xunit = omega_n * cos(th);
+yunit = omega_n * sin(th);
+figure(42), rlocus(ksFind*G_c)
+hold on, axis equal, grid on;
+h = plot(xunit, yunit,'r');
+
+% Plot overshoot
+x = -100:0.01:0;
+y = x/tan(asin(xi));
+plot(x,-y,'r')
+plot(x,y,'r')
+
+% Plot settling time
+xline(-sigma,'-r')
+
+% Draw axes
+xline(0,'-');
+yline(0,'-');
+
+hold off
 
