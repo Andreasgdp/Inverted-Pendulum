@@ -80,7 +80,7 @@ pendulum_poles = pole(G_p);
 pendulum_zeros = zero(G_p);
 
 % Pzmap
-figure, pzmap(G_c)
+%figure, pzmap(G_c)
 %figure, pzmap(G_p)
 
 % Step
@@ -132,9 +132,9 @@ td = 5.55644601779429;
 
 ksFind = (1 + ti/(s) + td*s);
 
-pole((ksFind*G_c)/(1+ksFind*G_c))
-zero((ksFind*G_c)/(1+ksFind*G_c))
-figure, pzmap((ksFind*G_c)/(1+ksFind*G_c))
+%pole((ksFind*G_c)/(1+ksFind*G_c))
+%zero((ksFind*G_c)/(1+ksFind*G_c))
+%figure, pzmap((ksFind*G_c)/(1+ksFind*G_c))
 
 %figure(69), rlocus(ksFind*G_p)
 %% test PID 1 1 1
@@ -179,4 +179,21 @@ xline(0,'-');
 yline(0,'-');
 
 hold off
+
+%% Modern control 
+
+% Controllability
+% See further up in document
+
+% LQR controller
+Q = [1000 0 0 0;
+     0 1 0 0;
+     0 0 10 0;
+     0 0 0 1];
+R = 0.05;
+K = lqr(A,B,Q,R);
+
+lqr_sys = ss((A-B*K), B, C, D);
+
+
 
