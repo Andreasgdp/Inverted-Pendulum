@@ -16,26 +16,38 @@ I = (1/3)*m*(2*l)^2;
 %% Definition of state space
 x = [x_c; v_c; theta; omega];
 u = F;
+% Original f
+% -------------------------------------------------------------------------
+% f = [v_c; 
+%     (b_p*m*l*omega*cos(theta) + m^2*l^2*g*sin(theta)*cos(theta) + (I + m*l^2)*(-b_c*v_c + F + m*l*omega^2*sin(theta)))/(M*m*l^2 + (M+m)*I + m^2*l^2*sin(theta)^2); 
+%     omega; 
+%     -(F*m*l*cos(theta) - b_c*m*l*v_c*cos(theta) + m^2*l^2*omega^2*sin(theta)*cos(theta) + (M + m)*(b_p*omega + g*m*l*sin(theta)))/(M*m*l^2 + (M + m)*I + m^2*l^2*sin(theta)^2)];
+% -------------------------------------------------------------------------
+
+% f where cos(theta) is changed to (-cos(theta)) due to theta being changed
+% to 0 instead of pi.
+% -------------------------------------------------------------------------
 f = [v_c; 
     (b_p*m*l*omega*(-cos(theta)) + m^2*l^2*g*sin(theta)*(-cos(theta)) + (I + m*l^2)*(-b_c*v_c + F + m*l*omega^2*sin(theta)))/(M*m*l^2 + (M+m)*I + m^2*l^2*sin(theta)^2); 
     omega; 
     -(F*m*l*(-cos(theta)) - b_c*m*l*v_c*(-cos(theta)) + m^2*l^2*omega^2*sin(theta)*(-cos(theta)) + (M + m)*(b_p*omega + g*m*l*sin(theta)))/(M*m*l^2 + (M + m)*I + m^2*l^2*sin(theta)^2)];
+% -------------------------------------------------------------------------
 
 %% A
 A = [diff(f(1), x(1)) diff(f(1), x(2)) diff(f(1), x(3)) diff(f(1), x(4)); 
     diff(f(2), x(1)) diff(f(2), x(2)) diff(f(2), x(3)) diff(f(2), x(4)); 
     diff(f(3), x(1)) diff(f(3), x(2)) diff(f(3), x(3)) diff(f(3), x(4)); 
     diff(f(4), x(1)) diff(f(4), x(2)) diff(f(4), x(3)) diff(f(4), x(4))];
+% A = subs(A,theta,pi);   % Replace theta with pi
 A = subs(A,theta,0);   % Replace theta with pi
 A = subs(A,omega,0);   % Replace omega with diff(theta,t) = 0
 
 %% B
 B = [diff(f(1), u); diff(f(2), u); diff(f(3), u); diff(f(4), u)];
+% B = subs(B,theta,pi);   % Replace theta with pi
 B = subs(B,theta,0);   % Replace theta with pi
 
 %% C
-%C = [diff(x(1), x(1)) diff(x(2), x(2)) diff(x(3), x(3)) diff(x(4),x(4))];
-%C = subs(C,theta,pi);   % Replace theta with pi
 C = [1 0 0 0; 0 0 1 0];
 
 %% D
@@ -53,8 +65,7 @@ B = double(B);
 C = double(C);
 D = double(D);
 
-
-%% zero pole system 
+%% Transfer function for cart pos 
 TF_Cart = zpk(ss(A,B,C(1,:),D(1)));
 G_c = minreal(TF_Cart);
 
@@ -62,37 +73,30 @@ G_c = minreal(TF_Cart);
 TF_Pend = zpk(ss(A,B,C(2,:),D(2)));
 G_p = minreal(TF_Pend);
 
-
-
 % %% State space model to Transfer function
-sys = ss(A, B, C, D)
+% sys = ss(A, B, C, D);
+% G = tf(sys);
+% G_c = G(1);
+% G_p = G(2);
 
-%pzmap(sys)
-
-G = tf(sys);
-
-G_c = G(1);
-G_p = G(2);
-
-% 
-% % Pole and zero
-% cart_poles = pole(G_c);
-% cart_zeros = zero(G_c);
+% Pole and zero
+cart_poles = pole(G_c);
+cart_zeros = zero(G_c);
 
 pendulum_poles = pole(G_p);
 pendulum_zeros = zero(G_p);
 
 % Pzmap
-%figure, pzmap(G_c)
-%figure, pzmap(G_p)
+% figure, pzmap(G_c)
+% figure, pzmap(G_p)
 
 % Step
 % figure, step(G_c)
-%figure, step(G_p)
+% figure, step(G_p)
 
-
-
-%figure, rlocus(G_p)
+% Root Locus
+% figure, rlocus(G_p)
+% figure, rlocus(G_c)
 
 %% test P
 s = tf('s');
@@ -108,9 +112,9 @@ ksFind = (1 + td*s);
 
 %figure(43), rlocus(ksFind*G_p)
 %% test PID
-% kp = 120;
-% ti = 10;
-% td = 0.08;
+kp = 120;
+ti = 10;
+td = 0.08;
 
 % kp = 60;
 % ti = 10.0545991325963;
@@ -124,31 +128,13 @@ ksFind = (1 + td*s);
 % ti = 4.79031708469581;
 % td = 0.0396308247236052;
 
-% Cart
-% kp = -0.0603910190701767;
-% ti = 0.0784455862847791;
-% td = 3.01881554246508;
-
-kp = -0.0163648626701333;
-ti = 0.0434531271556642;
-td = 5.55644601779429;
-
 ksFind = (1 + ti/(s) + td*s);
 
-%pole((ksFind*G_c)/(1+ksFind*G_c))
-%zero((ksFind*G_c)/(1+ksFind*G_c))
-%figure, pzmap((ksFind*G_c)/(1+ksFind*G_c))
+%pole((ksFind*G_p)/(1+ksFind*G_p))
+%zero((ksFind*G_p)/(1+ksFind*G_p))
+%figure, pzmap((ksFind*G_p)/(1+ksFind*G_p))
 
 %figure(69), rlocus(ksFind*G_p)
-%% test PID 1 1 1
-% Kp = 120;
-% Ki = 35;
-% Kd = 8;
-% Contr = pid(Kp,Ki,Kd);
-% T = feedback(G_p,Contr);
-% figure()
-% t=0:0.01:10;
-% impulse(T,t)
 
 %% Performance specification 
 t_r = 0.2;         %s
@@ -164,7 +150,7 @@ sigma = -(log(alpha))/(t_s);
 th = pi/2:pi/100:(3*pi)/2;
 xunit = omega_n * cos(th);
 yunit = omega_n * sin(th);
-figure(42), rlocus(ksFind*G_c)
+figure(42), rlocus(ksFind*G_p)
 hold on, axis equal, grid on;
 h = plot(xunit, yunit,'r');
 
@@ -198,9 +184,11 @@ K = lqr(A,B,Q,R);
 
 lqr_sys = ss((A-B*K), B, C, D);
 
+% Observability
+% See further up in document
 
+% Observer
 obsPoles = eig(A + B * K) * 5;
-% obsPoles = [-2.5025; -2.6025; -2.7025; -2.8025]*5;
 L = (-place(A', C', obsPoles))';
 
 
