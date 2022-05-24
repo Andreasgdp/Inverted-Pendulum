@@ -1,8 +1,8 @@
 clc
 clear
-close all
+% close all
 
-syms x_c v_c theta omega F m M l b_p b_c g I t s
+syms x_c v_c theta omega F m M l b_p b_c g I t s DDtheta DDx_c
 
 %% Parameters
 m = 0.084;
@@ -13,6 +13,58 @@ b_p = 0.0012;
 b_c = 5;
 I = (1/3)*m*(2*l)^2;
 
+%% Vi fjoller rundt
+%-------------------------------------------------------------------------------------------------------------------------------
+Epot = m*g*l*cos(theta);
+
+Ekintc = 1/2*M*v_c^2;
+
+% Ekintp = 1/2*m*(diff(x_c+l*sin(theta))^2+(diff(-l*cos(theta))^2));
+% (diff(x_c+l*sin(theta)) = v_c + omega*l*cos(theta)
+% diff(-l*cos(theta))^2) = l*omega*sin(theta)
+% diff(l*cos(theta))^2) = -l*omega*sin(theta)
+Ekintp = 1/2*m*((v_c + omega*l*cos(theta))^2+(-l*omega*sin(theta))^2);
+
+Ekint = Ekintc + Ekintp;
+
+Ekinr = 1/2 * I * omega^2;
+
+Ekin = Ekint + Ekinr;
+
+L1 = 1/2*M*v_c^2 + 1/2*m*v_c^2 + 1/2*m*l^2*omega^2 + m*l*v_c*omega*cos(theta) + 1/2*I*omega^2 + m*g*l*cos(theta);
+
+L = Ekin - Epot;
+
+q  = [x_c, theta];
+Dq = [v_c, omega];
+Eq = LagrangeDynamicEqDeriver(L, q, Dq);
+
+eq1 = Eq(1) == F - b_c*v_c;
+eq2 = Eq(2) == b_p*omega;
+
+ddTheta = ((-b_c*v_c + F)*l*m*cos(theta) + cos(theta)*sin(theta)*l^2*m^2*omega^2 - M*sin(theta)*g*l*m - sin(theta)*g*l*m^2 - M*b_p*omega - b_p*m*omega)/(cos(theta)^2*l^2*m^2 - M*l^2*m - l^2*m^2 - m*I - M*I);
+
+ddX_c = ((b_p*omega + g*l*m*sin(theta))*l*m*cos(theta) - sin(theta)*l^3*m^2*omega^2 - sin(theta)*l*m*omega^2*I + b_c*l^2*m*v_c - F*l^2*m + b_c*v_c*I - F*I)/(cos(theta)^2*l^2*m^2 - M*l^2*m - l^2*m^2 - m*I - M*I);
+
+ddThetaNegativeCos = ((-b_c*v_c + F)*l*m*-cos(theta) + -cos(theta)*sin(theta)*l^2*m^2*omega^2 - M*sin(theta)*g*l*m - sin(theta)*g*l*m^2 - M*b_p*omega - b_p*m*omega)/(-cos(theta)^2*l^2*m^2 - M*l^2*m - l^2*m^2 - m*I - M*I);
+
+ddX_cNegativeCos = ((b_p*omega + g*l*m*sin(theta))*l*m*-cos(theta) - sin(theta)*l^3*m^2*omega^2 - sin(theta)*l*m*omega^2*I + b_c*l^2*m*v_c - F*l^2*m + b_c*v_c*I - F*I)/(-cos(theta)^2*l^2*m^2 - M*l^2*m - l^2*m^2 - m*I - M*I);
+
+% -------------------------------------------------------------------------
+% f = [v_c; 
+%     ddX_c; 
+%     omega; 
+%     ddTheta];
+% -------------------------------------------------------------------------
+% -------------------------------------------------------------------------
+f = [v_c; 
+    ddX_cNegativeCos; 
+    omega; 
+    ddThetaNegativeCos];
+% -------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------------------------------------------------------
 %% Definition of state space
 x = [x_c; v_c; theta; omega];
 u = F;
@@ -27,10 +79,10 @@ u = F;
 % f where cos(theta) is changed to (-cos(theta)) due to theta being changed
 % to 0 instead of pi.
 % -------------------------------------------------------------------------
-f = [v_c; 
-    (b_p*m*l*omega*(-cos(theta)) + m^2*l^2*g*sin(theta)*(-cos(theta)) + (I + m*l^2)*(-b_c*v_c + F + m*l*omega^2*sin(theta)))/(M*m*l^2 + (M+m)*I + m^2*l^2*sin(theta)^2); 
-    omega; 
-    -(F*m*l*(-cos(theta)) - b_c*m*l*v_c*(-cos(theta)) + m^2*l^2*omega^2*sin(theta)*(-cos(theta)) + (M + m)*(b_p*omega + g*m*l*sin(theta)))/(M*m*l^2 + (M + m)*I + m^2*l^2*sin(theta)^2)];
+% f = [v_c; 
+%     (b_p*m*l*omega*(-cos(theta)) + m^2*l^2*g*sin(theta)*(-cos(theta)) + (I + m*l^2)*(-b_c*v_c + F + m*l*omega^2*sin(theta)))/(M*m*l^2 + (M+m)*I + m^2*l^2*sin(theta)^2); 
+%     omega; 
+%     -(F*m*l*(-cos(theta)) - b_c*m*l*v_c*(-cos(theta)) + m^2*l^2*omega^2*sin(theta)*(-cos(theta)) + (M + m)*(b_p*omega + g*m*l*sin(theta)))/(M*m*l^2 + (M + m)*I + m^2*l^2*sin(theta)^2)];
 % -------------------------------------------------------------------------
 
 %% A
@@ -66,18 +118,18 @@ C = double(C);
 D = double(D);
 
 %% Transfer function for cart pos 
-TF_Cart = zpk(ss(A,B,C(1,:),D(1)));
-G_c = minreal(TF_Cart);
-
-%% Transfer function for pendulum angle
-TF_Pend = zpk(ss(A,B,C(2,:),D(2)));
-G_p = minreal(TF_Pend);
+% TF_Cart = zpk(ss(A,B,C(1,:),D(1)));
+% G_c = minreal(TF_Cart);
+% 
+% %% Transfer function for pendulum angle
+% TF_Pend = zpk(ss(A,B,C(2,:),D(2)));
+% G_p = minreal(TF_Pend);
 
 % %% State space model to Transfer function
-% sys = ss(A, B, C, D);
-% G = tf(sys);
-% G_c = G(1);
-% G_p = G(2);
+sys = ss(A, B, C, D);
+G = tf(sys);
+G_c = G(1);
+G_p = G(2);
 
 % Pole and zero
 cart_poles = pole(G_c);
@@ -108,13 +160,14 @@ s = tf('s');
 kp = 120;
 td = 0.08;
 
-ksFind = (1 + td*s);
+kpdFind = (1 + td*s);
 
 %figure(43), rlocus(ksFind*G_p)
 %% test PID
-kp = 120;
+kp = 250;
 ti = 10;
 td = 0.08;
+
 
 % kp = 60;
 % ti = 10.0545991325963;
@@ -128,7 +181,7 @@ td = 0.08;
 % ti = 4.79031708469581;
 % td = 0.0396308247236052;
 
-ksFind = (1 + ti/(s) + td*s);
+kpidFind = (1 + ti/(s) + td*s);
 
 %pole((ksFind*G_p)/(1+ksFind*G_p))
 %zero((ksFind*G_p)/(1+ksFind*G_p))
@@ -138,7 +191,7 @@ ksFind = (1 + ti/(s) + td*s);
 
 %% Performance specification 
 t_r = 0.2;         %s
-M_p = 40/100;
+M_p = 20/100;
 t_s = 2;         %s
 alpha = 0.5/100;
 
@@ -150,24 +203,26 @@ sigma = -(log(alpha))/(t_s);
 th = pi/2:pi/100:(3*pi)/2;
 xunit = omega_n * cos(th);
 yunit = omega_n * sin(th);
-figure(42), rlocus(ksFind*G_p)
+% figure(42), rlocus(kpidFind*G_p)
 hold on, axis equal, grid on;
-h = plot(xunit, yunit,'r');
+h = plot(xunit, yunit,'m');
 
 % Plot overshoot
 x = -100:0.01:0;
 y = x/tan(asin(xi));
-plot(x,-y,'r')
-plot(x,y,'r')
+plot(x,-y,'m')
+plot(x,y,'m')
 
 % Plot settling time
-xline(-sigma,'-r')
+xline(-sigma,'-m')
 
 % Draw axes
 xline(0,'-');
 yline(0,'-');
 
 hold off
+
+
 
 %% Modern control 
 
@@ -191,4 +246,4 @@ lqr_sys = ss((A-B*K), B, C, D);
 obsPoles = eig(A + B * K) * 5;
 L = (-place(A', C', obsPoles))';
 
-
+% stepinfo(ksFind*G_p, 'SettlingTimeThreshold', 0.005)
