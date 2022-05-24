@@ -1,6 +1,6 @@
 clc
 clear
-% close all
+close all
 
 syms x_c v_c theta omega F m M l b_p b_c g I t s DDtheta DDx_c
 
@@ -152,43 +152,34 @@ pendulum_zeros = zero(G_p);
 
 %% test P
 s = tf('s');
-kp = 120;
+kp = 250;
 
+% pole((kp*G_p)/(1+kp*G_p))
+% figure, pzmap((kp*G_p)/(1+kp*G_p))
 %figure(42), rlocus(G_p)
 %% test PD
 s = tf('s');
-kp = 120;
+kp = 250;
 td = 0.08;
 
-kpdFind = (1 + td*s);
+kpdFind = kp * (1 + td*s);
 
+% pole((kpdFind*G_p)/(1+kpdFind*G_p))
+% zero((kpdFind*G_p)/(1+kpdFind*G_p))
+% figure, pzmap((kpdFind*G_p)/(1+kpdFind*G_p))
 %figure(43), rlocus(ksFind*G_p)
 %% test PID
 kp = 250;
 ti = 10;
 td = 0.08;
 
+kpidFind = kp * (1 + ti/(s) + td*s);
 
-% kp = 60;
-% ti = 10.0545991325963;
-% td = 0.0244071621390575;
-
-% kp = 558;
-% ti = 3233.12;
-% td = 22.38;
-
-% kp = 37.5559806691701;
-% ti = 4.79031708469581;
-% td = 0.0396308247236052;
-
-kpidFind = (1 + ti/(s) + td*s);
-
-%pole((ksFind*G_p)/(1+ksFind*G_p))
-%zero((ksFind*G_p)/(1+ksFind*G_p))
-%figure, pzmap((ksFind*G_p)/(1+ksFind*G_p))
+% pole((kpidFind*G_p)/(1+kpidFind*G_p))
+% zero((kpidFind*G_p)/(1+kpidFind*G_p))
+% figure, pzmap((kpidFind*G_p)/(1+kpidFind*G_p))
 
 %figure(69), rlocus(ksFind*G_p)
-
 %% Performance specification 
 t_r = 0.2;         %s
 M_p = 20/100;
@@ -203,7 +194,7 @@ sigma = -(log(alpha))/(t_s);
 th = pi/2:pi/100:(3*pi)/2;
 xunit = omega_n * cos(th);
 yunit = omega_n * sin(th);
-% figure(42), rlocus(kpidFind*G_p)
+figure(42), rlocus(kpidFind*G_p)
 hold on, axis equal, grid on;
 h = plot(xunit, yunit,'m');
 
@@ -221,8 +212,6 @@ xline(0,'-');
 yline(0,'-');
 
 hold off
-
-
 
 %% Modern control 
 
