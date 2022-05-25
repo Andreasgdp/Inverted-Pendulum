@@ -152,11 +152,12 @@ pendulum_zeros = zero(G_p);
 
 %% test P
 s = tf('s');
-kp = 250;
+kp = 25;
 
 % pole((kp*G_p)/(1+kp*G_p))
+% zero((kp*G_p)/(1+kp*G_p))
 % figure, pzmap((kp*G_p)/(1+kp*G_p))
-%figure(42), rlocus(G_p)
+% figure, rlocus(kp*G_p)
 %% test PD
 s = tf('s');
 kp = 250;
@@ -167,7 +168,18 @@ kpdFind = kp * (1 + td*s);
 % pole((kpdFind*G_p)/(1+kpdFind*G_p))
 % zero((kpdFind*G_p)/(1+kpdFind*G_p))
 % figure, pzmap((kpdFind*G_p)/(1+kpdFind*G_p))
-%figure(43), rlocus(ksFind*G_p)
+% figure, rlocus(kpdFind*G_p)
+%% test PI
+kp = 250;
+ti = 10;
+
+kpiFind = kp * (1 + ti/(s));
+
+% pole((kpiFind*G_p)/(1+kpiFind*G_p))
+% zero((kpiFind*G_p)/(1+kpiFind*G_p))
+% figure, pzmap((kpidFind*G_p)/(1+kpidFind*G_p))
+
+% figure, rlocus(kpiFind*G_p)
 %% test PID
 kp = 250;
 ti = 10;
@@ -190,28 +202,59 @@ omega_n = 1.8/t_r;
 xi = sqrt((log(M_p)/(-pi))^2 / (1+(log(M_p)/(-pi))^2));
 sigma = -(log(alpha))/(t_s);
 
+figure, rlocus(kp*G_p)
+% figure, rlocus(kpdFind*G_p)
+% figure, rlocus(kpidFind*G_p)
+
+% performancePlotColor = [0.9294, 0.6941, 0.1255];
+% performancePlotColor = [0.40, 0.40, 0.40];
+performancePlotColor = [0.1, 0.1, 0.1];
+
 % Plot rise time
 th = pi/2:pi/100:(3*pi)/2;
 xunit = omega_n * cos(th);
 yunit = omega_n * sin(th);
-figure(42), rlocus(kpidFind*G_p)
 hold on, axis equal, grid on;
-h = plot(xunit, yunit,'m');
+h = plot(xunit, yunit,'color',performancePlotColor,'LineWidth',1.5);
 
 % Plot overshoot
 x = -100:0.01:0;
+% x = -6:0.01:0;
 y = x/tan(asin(xi));
-plot(x,-y,'m')
-plot(x,y,'m')
+plot(x,-y,'color',performancePlotColor,'LineWidth',1.5)
+plot(x,y,'color',performancePlotColor,'LineWidth',1.5)
 
 % Plot settling time
-xline(-sigma,'-m')
+% xline(-sigma,'color',[0.40, 0.40, 0.40],'LineWidth',1.5)
+plot([-sigma -sigma],[-100 100],'color',performancePlotColor,'LineWidth',1.5);
+% plot([-sigma -sigma],[-11.711887594987030 11.711887594987030],'color',performancePlotColor,'LineWidth',1.5);
 
 % Draw axes
-xline(0,'-');
-yline(0,'-');
+% xline(0,'-');
+% yline(0,'-');
+set(gca, 'XAxisLocation', 'origin')
+set(gca, 'YAxisLocation', 'origin')
+set(gca,'Xlim',[-25 10],'YLim',[-15 15])
+
+set(findall(gcf,'type','line'),'linewidth',1.5);
+
+% % Labels
+% ylabel('$Im(s)$','interpreter','latex')
+% xlabel('$Re(s)$','interpreter','latex')
 
 hold off
+%% Positon and size of window
+%Positions
+gca = figure(1);
+% set figure hight and width
+xSize = 900; ySize = 800; % 1 plot
+xLeft = 100; yTop = 100;
+set(gca,'Position',[xLeft yTop xSize ySize])
+
+% exportgraphics(gca,'performancePlot.pdf','ContentType','vector')
+exportgraphics(gca,'p_controller_pendulum_rlocus.pdf','ContentType','vector')
+% exportgraphics(gca,'pd_controller_pendulum_rlocus.pdf','ContentType','vector')
+% exportgraphics(gca,'pid_controller_pendulum_rlocus.pdf','ContentType','vector')
 
 %% Modern control 
 
