@@ -1,5 +1,5 @@
-clc
-clear
+% clc
+% clear
 close all
 
 syms x_c v_c theta omega F m M l b_p b_c g I t s DDtheta DDx_c
@@ -192,69 +192,69 @@ kpidFind = kp * (1 + ti/(s) + td*s);
 % figure, pzmap((kpidFind*G_p)/(1+kpidFind*G_p))
 
 %figure(69), rlocus(ksFind*G_p)
-%% Performance specification 
-t_r = 0.2;         %s
-M_p = 20/100;
-t_s = 2;         %s
-alpha = 0.5/100;
-
-omega_n = 1.8/t_r;
-xi = sqrt((log(M_p)/(-pi))^2 / (1+(log(M_p)/(-pi))^2));
-sigma = -(log(alpha))/(t_s);
-
-figure, rlocus(kp*G_p)
-% figure, rlocus(kpdFind*G_p)
-% figure, rlocus(kpidFind*G_p)
-
-% performancePlotColor = [0.9294, 0.6941, 0.1255];
-% performancePlotColor = [0.40, 0.40, 0.40];
-performancePlotColor = [0.1, 0.1, 0.1];
-
-% Plot rise time
-th = pi/2:pi/100:(3*pi)/2;
-xunit = omega_n * cos(th);
-yunit = omega_n * sin(th);
-hold on, axis equal, grid on;
-h = plot(xunit, yunit,'color',performancePlotColor,'LineWidth',1.5);
-
-% Plot overshoot
-x = -100:0.01:0;
-% x = -6:0.01:0;
-y = x/tan(asin(xi));
-plot(x,-y,'color',performancePlotColor,'LineWidth',1.5)
-plot(x,y,'color',performancePlotColor,'LineWidth',1.5)
-
-% Plot settling time
-% xline(-sigma,'color',[0.40, 0.40, 0.40],'LineWidth',1.5)
-plot([-sigma -sigma],[-100 100],'color',performancePlotColor,'LineWidth',1.5);
-% plot([-sigma -sigma],[-11.711887594987030 11.711887594987030],'color',performancePlotColor,'LineWidth',1.5);
-
-% Draw axes
-% xline(0,'-');
-% yline(0,'-');
-set(gca, 'XAxisLocation', 'origin')
-set(gca, 'YAxisLocation', 'origin')
-set(gca,'Xlim',[-25 10],'YLim',[-15 15])
-
-set(findall(gcf,'type','line'),'linewidth',1.5);
-
-% % Labels
-% ylabel('$Im(s)$','interpreter','latex')
-% xlabel('$Re(s)$','interpreter','latex')
-
-hold off
-%% Positon and size of window
-%Positions
-gca = figure(1);
-% set figure hight and width
-xSize = 900; ySize = 800; % 1 plot
-xLeft = 100; yTop = 100;
-set(gca,'Position',[xLeft yTop xSize ySize])
-
-% exportgraphics(gca,'performancePlot.pdf','ContentType','vector')
-exportgraphics(gca,'p_controller_pendulum_rlocus.pdf','ContentType','vector')
-% exportgraphics(gca,'pd_controller_pendulum_rlocus.pdf','ContentType','vector')
-% exportgraphics(gca,'pid_controller_pendulum_rlocus.pdf','ContentType','vector')
+% %% Performance specification 
+% t_r = 0.2;         %s
+% M_p = 20/100;
+% t_s = 2;         %s
+% alpha = 0.5/100;
+% 
+% omega_n = 1.8/t_r;
+% xi = sqrt((log(M_p)/(-pi))^2 / (1+(log(M_p)/(-pi))^2));
+% sigma = -(log(alpha))/(t_s);
+% 
+% figure, rlocus(kp*G_p)
+% % figure, rlocus(kpdFind*G_p)
+% % figure, rlocus(kpidFind*G_p)
+% 
+% % performancePlotColor = [0.9294, 0.6941, 0.1255];
+% % performancePlotColor = [0.40, 0.40, 0.40];
+% performancePlotColor = [0.1, 0.1, 0.1];
+% 
+% % Plot rise time
+% th = pi/2:pi/100:(3*pi)/2;
+% xunit = omega_n * cos(th);
+% yunit = omega_n * sin(th);
+% hold on, axis equal, grid on;
+% h = plot(xunit, yunit,'color',performancePlotColor,'LineWidth',1.5);
+% 
+% % Plot overshoot
+% x = -100:0.01:0;
+% % x = -6:0.01:0;
+% y = x/tan(asin(xi));
+% plot(x,-y,'color',performancePlotColor,'LineWidth',1.5)
+% plot(x,y,'color',performancePlotColor,'LineWidth',1.5)
+% 
+% % Plot settling time
+% % xline(-sigma,'color',[0.40, 0.40, 0.40],'LineWidth',1.5)
+% plot([-sigma -sigma],[-100 100],'color',performancePlotColor,'LineWidth',1.5);
+% % plot([-sigma -sigma],[-11.711887594987030 11.711887594987030],'color',performancePlotColor,'LineWidth',1.5);
+% 
+% % Draw axes
+% % xline(0,'-');
+% % yline(0,'-');
+% set(gca, 'XAxisLocation', 'origin')
+% set(gca, 'YAxisLocation', 'origin')
+% set(gca,'Xlim',[-25 10],'YLim',[-15 15])
+% 
+% set(findall(gcf,'type','line'),'linewidth',1.5);
+% 
+% % % Labels
+% % ylabel('$Im(s)$','interpreter','latex')
+% % xlabel('$Re(s)$','interpreter','latex')
+% 
+% hold off
+% %% Positon and size of window
+% %Positions
+% gca = figure(1);
+% % set figure hight and width
+% xSize = 900; ySize = 800; % 1 plot
+% xLeft = 100; yTop = 100;
+% set(gca,'Position',[xLeft yTop xSize ySize])
+% 
+% % exportgraphics(gca,'performancePlot.pdf','ContentType','vector')
+% exportgraphics(gca,'p_controller_pendulum_rlocus.pdf','ContentType','vector')
+% % exportgraphics(gca,'pd_controller_pendulum_rlocus.pdf','ContentType','vector')
+% % exportgraphics(gca,'pid_controller_pendulum_rlocus.pdf','ContentType','vector')
 
 %% Modern control 
 
@@ -279,3 +279,202 @@ obsPoles = eig(A + B * K) * 5;
 L = (-place(A', C', obsPoles))';
 
 % stepinfo(ksFind*G_p, 'SettlingTimeThreshold', 0.005)
+
+
+
+
+
+% -------------------------------------------------------------------------------------------------------------------------------------------------
+%% Convert orientation
+% Pos =Data(:,1:3);
+% Ori = Data(:,4:6);
+
+%% calculate time based on the input signal and sampling rate
+dt = 1/1000;
+time= length(out.onePidSimout.time);
+T= time*dt;
+Time = 0:dt:T;
+Time = Time(:,1:length(out.onePidSimout.time))';
+
+%% plot 
+%Positions
+gca = figure(1)
+% set figure hight and width
+xSize = 900; ySize = 500; % 1 plot
+xLeft = 100; yTop = 100;
+set(gca,'Position',[xLeft yTop xSize ySize])
+%% PLot data 
+subplot(2,1,1)
+H1=plot(Time,out.onePidSimout.data(:,1), 'b', 'LineWidth',1.5);
+ylabel('$Cart_{pos}$ [m]','interpreter','latex', 'FontSize', 14)
+legend([H1],'Angle', 'Location','northeast');
+grid on
+
+subplot(2,1,2)
+H2 = plot(Time, 0*ones(size(out.onePidSimout.data(:,2))), 'r', 'LineWidth',1.5);
+hold on
+H3 = plot(Time,out.onePidSimout.data(:,2), 'b', 'LineWidth',1.5);
+ylabel('$Pendulum_{angle}$ [rad]','interpreter','latex', 'FontSize', 14)
+xlabel('$Time$ [s]','interpreter','latex', 'FontSize', 14)
+legend([H3, H2],'Angle', 'Desired Angle','Location','northeast');
+grid on
+
+%% setup figure parameters 
+set(gca,'Units','Inches');
+pos = get(gca,'Position');
+set(gca,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+% save figure as vector .pdf
+exportgraphics(gca,'onePIDSim.pdf','ContentType','vector')
+
+
+
+
+
+
+%% plot 
+%Positions
+gca = figure(2)
+% set figure hight and width
+xSize = 900; ySize = 500; % 1 plot
+xLeft = 100; yTop = 100;
+set(gca,'Position',[xLeft yTop xSize ySize])
+%% PLot data 
+subplot(2,1,1)
+H1=plot(Time,out.disturbedOnePidSimout.data(:,1), 'b', 'LineWidth',1.5);
+ylabel('$Cart_{pos}$ [m]','interpreter','latex', 'FontSize', 14)
+legend([H1],'Angle', 'Location','northeast');
+grid on
+
+subplot(2,1,2)
+H2 = plot(Time, 0*ones(size(out.disturbedOnePidSimout.data(:,2))), 'r', 'LineWidth',1.5);
+hold on
+H3 = plot(Time,out.disturbedOnePidSimout.data(:,2), 'b', 'LineWidth',1.5);
+ylabel('$Pendulum_{angle}$ [rad]','interpreter','latex', 'FontSize', 14)
+xlabel('$Time$ [s]','interpreter','latex', 'FontSize', 14)
+legend([H3, H2],'Angle', 'Desired Angle','Location','northeast');
+grid on
+
+%% setup figure parameters 
+set(gca,'Units','Inches');
+pos = get(gca,'Position');
+set(gca,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+% save figure as vector .pdf
+exportgraphics(gca,'disturbedOnePidSim.pdf','ContentType','vector')
+
+
+
+
+
+
+
+
+%% plot 
+%Positions
+gca = figure(3)
+% set figure hight and width
+xSize = 900; ySize = 500; % 1 plot
+xLeft = 100; yTop = 100;
+set(gca,'Position',[xLeft yTop xSize ySize])
+%% PLot data 
+subplot(2,1,1)
+H1 = plot(Time, 0*ones(size(out.cascadeSimout.data(:,2))), 'r', 'LineWidth',1.5);
+hold on
+H2 = plot(Time,out.cascadeSimout.data(:,1), 'b', 'LineWidth',1.5);
+ylabel('$Cart_{pos}$ [m]','interpreter','latex', 'FontSize', 14)
+legend([H2, H1],'Pos', 'Desired Pos','Location','northeast');
+grid on
+
+subplot(2,1,2)
+H3 = plot(Time, 0*ones(size(out.cascadeSimout.data(:,2))), 'r', 'LineWidth',1.5);
+hold on
+H4 = plot(Time,out.cascadeSimout.data(:,2), 'b', 'LineWidth',1.5);
+ylabel('$Pendulum_{angle}$ [rad]','interpreter','latex', 'FontSize', 14)
+xlabel('$Time$ [s]','interpreter','latex', 'FontSize', 14)
+legend([H4, H3],'Angle','Desired Angle','Location','northeast');
+grid on
+
+%% setup figure parameters 
+set(gca,'Units','Inches');
+pos = get(gca,'Position');
+set(gca,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+% save figure as vector .pdf
+exportgraphics(gca,'cascadeSim.pdf','ContentType','vector')
+
+
+
+
+
+
+
+
+%% plot 
+%Positions
+gca= figure(4)
+% set figure hight and width
+xSize = 900; ySize = 500; % 1 plot
+xLeft = 100; yTop = 100;
+set(gca,'Position',[xLeft yTop xSize ySize])
+%% PLot data 
+subplot(2,1,1)
+H1 = plot(Time, 0*ones(size(out.parallelSimout.data(:,2))), 'r', 'LineWidth',1.5);
+hold on
+H2 = plot(Time,out.parallelSimout.data(:,1), 'b', 'LineWidth',1.5);
+ylabel('$Cart_{pos}$ [m]','interpreter','latex', 'FontSize', 14)
+legend([H2, H1],'Pos', 'Desired Pos','Location','northeast');
+grid on
+
+subplot(2,1,2)
+H3 = plot(Time, 0*ones(size(out.parallelSimout.data(:,2))), 'r', 'LineWidth',1.5);
+hold on
+H4 = plot(Time,out.parallelSimout.data(:,2), 'b', 'LineWidth',1.5);
+ylabel('$Pendulum_{angle}$ [rad]','interpreter','latex', 'FontSize', 14)
+xlabel('$Time$ [s]','interpreter','latex', 'FontSize', 14)
+legend([H4, H3],'Angle','Desired Angle','Location','northeast');
+grid on
+
+%% setup figure parameters 
+set(gca,'Units','Inches');
+pos = get(gca,'Position');
+set(gca,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+% save figure as vector .pdf
+exportgraphics(gca,'parallelSim.pdf','ContentType','vector')
+
+
+
+
+
+
+
+
+
+%% plot 
+%Positions
+gca= figure(5)
+% set figure hight and width
+xSize = 900; ySize = 500; % 1 plot
+xLeft = 100; yTop = 100;
+set(gca,'Position',[xLeft yTop xSize ySize])
+%% PLot data 
+subplot(2,1,1)
+H1 = plot(Time, 0*ones(size(out.modernSimout.data(:,2))), 'r', 'LineWidth',1.5);
+hold on
+H2 = plot(Time,out.modernSimout.data(:,1), 'b', 'LineWidth',1.5);
+ylabel('$Cart_{pos}$ [m]','interpreter','latex', 'FontSize', 14)
+legend([H2, H1],'Pos', 'Desired Pos','Location','northeast');
+grid on
+
+subplot(2,1,2)
+H3 = plot(Time, 0*ones(size(out.modernSimout.data(:,2))), 'r', 'LineWidth',1.5);
+hold on
+H4 = plot(Time,out.modernSimout.data(:,2), 'b', 'LineWidth',1.5);
+ylabel('$Pendulum_{angle}$ [rad]','interpreter','latex', 'FontSize', 14)
+xlabel('$Time$ [s]','interpreter','latex', 'FontSize', 14)
+legend([H4, H3],'Angle','Desired Angle','Location','northeast');
+grid on
+
+%% setup figure parameters 
+set(gca,'Units','Inches');
+pos = get(gca,'Position');
+set(gca,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+% save figure as vector .pdf
+exportgraphics(gca,'modernSim.pdf','ContentType','vector')
