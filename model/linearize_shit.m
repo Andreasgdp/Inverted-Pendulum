@@ -3,13 +3,13 @@ close all
 syms x_c v_c theta omega F m M l b_p b_c g I t s
 
 %% Parameters
-m = 0.084;
-M = 0.5;
-l = 0.35;
-g = 9.82;
-b_p = 0.0012;
-b_c = 5;
-I = (1/3)*m*(2*l)^2;
+% m = 0.084;
+% M = 0.5;
+% l = 0.35;
+% g = 9.82;
+% b_p = 0.0012;
+% b_c = 5;
+% I = (1/3)*m*(2*l)^2;
 
 %% Definition of state space
 x = [x_c; v_c; theta; omega];
